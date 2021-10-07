@@ -1,12 +1,16 @@
 import sys
 # configurable
-ANUAL_SALARY = 1234567
-BONUS = 1234567
+ANUAL_SALARY = 12345678
+BONUS = 1234
 
-monthly_rent = 123
+# only if you use company benefit
+monthly_rent = 1234
 
-PERSONAL_EXEMPTION_NATIONAL = 480000 #+ 380000
-PERSONAL_EXEMPTION_LOCAL = 430000 #+ 330000
+
+# please check https://taxsummaries.pwc.com/japan/individual/deductions 
+# in Personal exemptions section
+PERSONAL_EXEMPTION_NATIONAL = 480000 + 380000*2
+PERSONAL_EXEMPTION_LOCAL = 430000 + 330000*2
 
 
 
@@ -30,8 +34,6 @@ WELFARE_TAX_BONUS = {"RATE": 9.15/100, "CAP": 137250}
 EMPLOYMENT_INSURANCE_RATE = 0.3/100
 
 LOCAL_TAX_RATE = 0.1
-
-FLAT_RATE = 20.42/100
 
 TAX_RATE = [
         {"LOWER" : 0, "UPPER": 1950000, "RATE": 0.05, "DEDUCTION": 0},
@@ -72,19 +74,7 @@ def calTax(anual_salary, bonus):
     
     social_tax_salary = int(salary_welfare_monthly*12 + salary_health_monthly*12 + employment_insurance*salary_percent)
     social_tax_bonus = int(bonus_welfare + bonus_health + employment_insurance*bonus_percent)
-    # first year
-    tax_salary = int((anual_salary - social_tax_salary) * FLAT_RATE + social_tax_salary)
-    tax_bonus = int((bonus - social_tax_bonus) * FLAT_RATE + social_tax_bonus)
     
-    taxed_salary = anual_salary - tax_salary
-    taxed_bonus = bonus - tax_bonus
-
-    print('\n')
-    print(f'first year tax on basis salary = {tax_salary:,}, monthly={int(tax_salary/12):,}, bonus = {tax_bonus:,}, total = {(tax_bonus + tax_salary):,}')
-    print(f'first year after tax on basis salary = {taxed_salary:,}, monthly={int(taxed_salary/12):,}, bonus = {taxed_bonus:,}, total = {(taxed_bonus + taxed_salary):,}')
-    print('\n')
-
-    # afterwards
     after_social_tax = total - social_tax_salary - social_tax_bonus
     after_allowance_deduction = after_social_tax - getAllowance(after_social_tax)
 
